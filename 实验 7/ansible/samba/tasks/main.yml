@@ -12,9 +12,9 @@
 - name: add samba user
   user:
     name: "{{ SMB_USER }}"
-    shell: /sbin/nologin
+    shell: "{{ NoLogin }}"
     createhome: no
-    password: "{{ SMB_PASS_HASH }}"
+    password: "{{ SMB_PASS | password_hash('sha512') }} "
     group: "{{ SMB_GROUP }}"
 
 - name: same name Linux user
