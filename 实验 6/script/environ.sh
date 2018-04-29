@@ -12,3 +12,6 @@ nfs_srv="192.168.178.101"
 nfs_clt="192.168.178.100"
 nfs_general_clt="/nfs/general"
 nfs_home_clt="/nfs/home"
+
+smbuser="demoUser"
+smbgroup="demoGroup"
