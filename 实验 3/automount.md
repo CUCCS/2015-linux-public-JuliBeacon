@@ -11,20 +11,20 @@ pre: 安装增强功能，否则无法识别vboxsf类型
 1. sudo vi /etc/systemd/system/mnt-tmp.mount
 mkdir /mnt/tmp
 
-    ![](img/mnt0.png)
+    ![](Img/mnt0.png)
 
 2. sudo systemctl list-unit-files | grep mnt-tmp.mount
 sudo systemctl enable mnt-tmp.mount
 
-    ![](img/mnt1.png)
+    ![](Img/mnt1.png)
 
 3. sudo vi /etc/systemd/system/mnt-tmp.automount
 
-    ![](img/mnt2.png)
+    ![](Img/mnt2.png)
 
 4. sudo systemctl enable mnt-tmp.automount
-    ![](img/mnt3.png)
+    ![](Img/mnt3.png)
 
 5. 重启，且只有当有进程访问到共享目录的挂载点 /mnt/tmp 时，目录才会自动挂载
 
-    ![](img/mnt.png)
+    ![](Img/mnt.png)
