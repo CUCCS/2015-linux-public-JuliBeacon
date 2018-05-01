@@ -16,10 +16,11 @@ function Instructions {
 
 # 对jpeg格式图片进行图片质量压缩
 function JPGCompress {                                                                                                                 
-	mkdir out-j
-    	for p in "$1"*.jpg; do
-	        fullname=$(basename "$p")
-        	filename=$(echo "$fullname" | cut -d . -f1)
+    	[ -d "out-j" ] || mkdir "out-j"
+	for p in "$1"*.jpg; do
+	        fullname="$(basename "$p")"
+        	# filename=$(echo "$fullname" | cut -d . -f1)
+		filename="${fullname%.*}"
         	convert "$p" -quality "$2"% ./out-j/"$filename"."jpg"
 	done
 
@@ -28,22 +29,27 @@ function JPGCompress {
 
 # 对jpeg/png/svg格式图片在保持原始宽高比的前提下压缩分辨率
 function CompressResolution {
-	mkdir c-output
+	[ -d "c-output" ] || mkdir c-output
 	for p in $(find "$1" -regex  '.*\.jpg\|.*\.svg\|.*\.png'); do
-		fullname=$(basename "$p")
-	    filename=$(echo "$fullname" | cut -d . -f1)
-		extension=$(echo "$fullname" | cut -d . -f2)
+		fullname="$(basename "$p")"
+		# filename=$(echo "$fullname" | cut -d . -f1)
+		filename="${fullname%.*}"
+		# extension=$(echo "$fullname" | cut -d . -f2)
+		extension="${fullname##*.}"
 		convert "$p" -resize "$2" ./c-output/"$filename"."$extension"
 	done
 }
 
 # 对图片批量添加自定义文本水印
 function Embed {
-	mkdir e-output
+	[ -d "e-output" ] || mkdir e-output
 	for p in $(find "$1" -regex  '.*\.jpg\|.*\.svg\|.*\.png'); do
-		fullname=$(basename "$p")
-        filename=$(echo "$fullname" | cut -d . -f1)
-		extension=$(echo "$fullname" | cut -d . -f2)
+		fullname="$(basename "$p")"
+        	# filename=$(echo "$fullname" | cut -d . -f1)
+		# extension=$(echo "$fullname" | cut -d . -f2)
+		filename="${fullname%.*}"
+		extension="${fullname##*.}"
+
 		# 图像宽度
 		width=$(identify -format %w "$p")
 		# 使用composite指令添加水印
@@ -55,31 +61,37 @@ function Embed {
 
 # 批量重命名（统一添加文件名前缀或后缀，不影响原始文件扩展名）
 function addPrefix {
-	mkdir p-output;
+	[ -d "p-output" ] || mkdir p-output;
 	for p in "$1"*.*; do
 		fullname=$(basename "$p")
-        filename=$(echo "$fullname" | cut -d . -f1)
-		extension=$(echo "$fullname" | cut -d . -f2)
+        	# filename=$(echo "$fullname" | cut -d . -f1)
+		# extension=$(echo "$fullname" | cut -d . -f2)
+		filename="${fullname%.*}"
+		extension="${fullname##*.}"
 		cp "$p" ./p-output/"$2""$filename"."$extension"
 	done
 }
 function addSuffix {
-	mkdir s-output;
+	[ -d "s-output" ] || mkdir s-output;
 	for p in "$1"*.*; do
 		fullname=$(basename "$p")
-	    filename=$(echo "$fullname" | cut -d . -f1)
-		extension=$(echo "$fullname" | cut -d . -f2)
+		# filename=$(echo "$fullname" | cut -d . -f1)
+		# extension=$(echo "$fullname" | cut -d . -f2)
+		filename="${fullname%.*}"
+		extension="${fullname##*.}"
 		cp "$p" ./s-output/"$filename""$2"."$extension"
 	done
 }
 
 # 将png/svg图片统一转换为jpg格式图片
 function Cvt2JPG {
-	mkdir v-output
+	[ -d "v-output" ] || mkdir v-output
 	for p in $(find "$1" -regex '.*\.svg\|.*\.png');do	
 		fullname=$(basename "$p")
-        filename=$(echo "$fullname" | cut -d . -f1)
-		extension=$(echo "$fullname" | cut -d . -f2)
+	        # filename=$(echo "$fullname" | cut -d . -f1)
+		# extension=$(echo "$fullname" | cut -d . -f2)
+		filename="${fullname%.*}"
+		extension="${fullname##*.}"
 		convert "$p" ./v-output/"$filename"".jpg"
 	done
 }

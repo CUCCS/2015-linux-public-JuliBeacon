@@ -46,8 +46,11 @@ function AgeInfo
 		elif [[ $age -eq $MIN ]]; then youngest=("${youngest[@]}" "$name")	# 若等于，则直接添加进数组
 		fi
 
-		if [[ $age -gt $MAX ]]; then MAX="$age" oldest=("$name")
-		elif [[ $age -eq $MAX ]]; then oldest=("${oldest[@]}" "$name")
+		if [[ $age -gt $MAX ]]; then 
+			MAX="$age" 
+			oldest=("$name")
+		elif [[ $age -eq $MAX ]]; then 
+			oldest=("${oldest[@]}" "$name")
 		fi	
 
 		ln=$((ln+1))
@@ -55,9 +58,10 @@ function AgeInfo
 	done
 
 	# 使用bc进行浮点数运算，保留小数点后4位
-	p1=$(echo "scale=4; $less_than_20/$sum*100" | bc)	
-	p2=$(echo "scale=4; $between_20_30/$sum*100" | bc)
-	p3=$(echo "scale=4; $greater_than_30/$sum*100" | bc)	
+	# p1=$(echo "scale=4; $less_than_20/$sum*100" | bc)	
+	# p2=$(echo "scale=4; $between_20_30/$sum*100" | bc)
+	# p3=$(echo "scale=4; $greater_than_30/$sum*100" | bc)	
+	
 
 	echo "The oldest player: "
 	for p in "${oldest[@]}"; do echo "$p"; done
@@ -69,9 +73,9 @@ function AgeInfo
 	echo "They are $MIN years old" 
 	echo -e "\n"	
 
-	echo "There are $less_than_20 players younger than 20, taking up $p1% of all players"
-	echo "There are $between_20_30 players aged between 20 and 30, taking up $p2% of all players"
-	echo "There are $greater_than_30 players older than 30, taking up $p3% of all players"
+	echo "There are $less_than_20 players younger than 20, taking up $(printf "%.4f" $(echo "$less_than_20/$sum*100" | bc -l))% of all players"
+	echo "There are $between_20_30 players aged between 20 and 30, taking up $(printf "%.4f" $(echo "$between_20_30/$sum*100" | bc -l))% of all players"
+	echo "There are $greater_than_30 players older than 30, taking up $(printf "%.4f" $(echo "$greater_than_30/$sum*100" | bc -l))% of all players"
 }
 
 
@@ -120,8 +124,9 @@ function PosInfo
 	printf "| Position |  Amount  |  Rate(%%) |\n"
 	printf "+--------------------------------+\n"
 	for pos in "${!dic[@]}"; do 
-		r=$(echo "scale=4; ${dic[$pos]}/$sum*100" | bc)
-		printf "|%-10s|%-10s|%-10.2f|\n" "$pos" "${dic[$pos]}" "$r"
+		# r=$(echo "scale=4; ${dic[$pos]}/$sum*100" | bc)
+		printf "|%-10s|%-10s|" "$pos" "${dic[$pos]}"
+		printf "%-10.2f|\n" $(echo "${dic[$pos]}/$sum*100" | bc -l)
 		printf "+--------------------------------+\n" 
 	done
 	
@@ -157,7 +162,9 @@ function NameInfo
 		for w in "${namarr[@]}"; do length=$((length+${#w}));done
 
 		# 出现更小的长度
-		if [[ $length -lt $shortest ]]; then shortest=$length sn=("$name");
+		if [[ $length -lt $shortest ]]; then 
+			shortest=$length 
+			sn=("$name")
 		# 名字长度相等
 		elif [[ $length -eq $shortest ]]; then
 			mark=0
@@ -168,14 +175,17 @@ function NameInfo
 		fi
 		
 		# 出现更长的长度
-		if [[ $length -gt $longest ]]; then longest=$length ln=("$name");
+		if [[ $length -gt $longest ]]; then 
+			longest=$length 
+			ln=("$name");
 		# 名字长度相等
 		elif [[ $length -eq $longest ]]; then
 			mark=0
 			for n in "${ln[@]}"; do
 				if [[ $n == "$name" ]]; then mark=1 break; fi
 			done
-			if [[ $mark -eq 0 ]]; then ln=(${ln[@]} "$name"); fi
+			# if [[ $mark -eq 0 ]]; then ln=(${ln[@]} "$name"); fi
+			if [[ $mark -eq 0 ]]; then ln[${#ln[@]}+1]="$name"; fi
 		fi
 		
 		l=$((l+1))
